@@ -1,3 +1,4 @@
+require("dotenv").config();
 var express = require("express");
 var exphbs = require("express-handlebars");
 
@@ -18,6 +19,7 @@ app.use(express.static("assets"));
 
 app.use("/assets", express.static(__dirname + "/assets"));
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
   console.log(`listening on http://localhost:3000`);
 });
