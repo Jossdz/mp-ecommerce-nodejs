@@ -5,7 +5,6 @@ var mercadopago = require("mercadopago");
 var app = express();
 
 mercadopago.configure({
-  sandbox: true,
   access_token: process.env.ACCESS_TOKEN
 });
 
