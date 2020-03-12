@@ -17,6 +17,7 @@ app.get("/", function(req, res) {
 
 app.get("/detail", async (req, res) => {
   const { title, price, unit } = req.query;
+
   let preference = {
     items: [
       {
@@ -25,6 +26,27 @@ app.get("/detail", async (req, res) => {
         quantity: Number(unit)
       }
     ],
+    payer: {
+      name: "Lalo",
+      surname: "Landa",
+      email: "ruben.gonzalez@testuser.com",
+      phone: {
+        area_code: "55",
+        number: 49737300
+      },
+      address: {
+        street_name: "Insurgentes Sur",
+        street_number: 1602,
+        zip_code: " 03940"
+      }
+    },
+    external_reference: "ABCD1234",
+
+    payment_methods: {
+      excluded_payment_methods: [{ id: "amex" }],
+      excluded_payment_types: [{ id: "atm" }],
+      default_installments: 6
+    },
     notification_url:
       "https://webhook.site/ac6ca1d5-9f9b-47d8-9766-60c19220ad3b"
   };
