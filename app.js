@@ -5,29 +5,9 @@ var mercadopago = require("mercadopago");
 var app = express();
 
 mercadopago.configure({
+  sandbox: true,
   access_token: process.env.ACCESS_TOKEN
 });
-
-// Crea un objeto de preferencia
-let preference = {
-  items: [
-    {
-      title: "Mi producto",
-      unit_price: 100,
-      quantity: 1
-    }
-  ]
-};
-
-mercadopago.preferences
-  .create(preference)
-  .then(function(response) {
-    // Este valor reemplazará el string "$$init_point$$" en tu HTML
-    global.init_point = response.body.init_point;
-  })
-  .catch(function(error) {
-    console.log(error);
-  });
 
 app.engine("handlebars", exphbs());
 app.set("view engine", "handlebars");
@@ -36,9 +16,28 @@ app.get("/", function(req, res) {
   res.render("home");
 });
 
-app.get("/detail", function(req, res) {
-  res.render("detail", req.query);
+app.get("/detail", async (req, res) => {
+  const { title, price, unit } = req.query;
+  let preference = {
+    items: [
+      {
+        title,
+        unit_price: Number(price),
+        quantity: Number(unit)
+      }
+    ],
+    notification_url:
+      "https://webhook.site/ac6ca1d5-9f9b-47d8-9766-60c19220ad3b"
+  };
+
+  const {
+    body: { id: prefID }
+  } = await mercadopago.preferences.create(preference);
+
+  res.render("detail", { ...req.query, prefID });
 });
+
+app.post((req, res) => {});
 
 app.use(express.static("assets"));
 
